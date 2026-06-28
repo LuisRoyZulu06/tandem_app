@@ -1,0 +1,120 @@
+<div class="page-content-wrapper bg-transparent m-0">
+  <div class="height-10 w-100 shadow-lg px-4 bg-brand-gradient">
+    <div class="d-flex align-items-center container p-0">
+      <div class="page-logo width-mobile-auto m-0 align-items-center justify-content-center p-0 bg-transparent bg-img-none shadow-0 height-9">
+        <a
+          href="javascript:void(0)"
+          class="page-logo-link press-scale-down d-flex align-items-center"
+        >
+          <img src="images/logo.png" alt="Tandem App" aria-roledescription="logo" />
+          <span class="page-logo-text mr-1">Tandem App</span>
+        </a>
+      </div>
+        <a href="#" class="btn-link text-white ml-auto">
+          Tandem App
+        </a>
+    </div>
+  </div>
+  
+  <div
+    class="flex-1"
+    style="background: url(img/svg/pattern-1.svg) no-repeat center bottom fixed; background-size: cover;"
+  >
+    <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0">
+      <div class="row">
+        <div class="col-md-3 hidden-sm-down"></div>
+        
+        <div class="col-md-6 ml-auto">
+          <h1 class="text-black fw-300 mb-3 d-sm-block d-md-block">
+            An app where accountability is transparent. Two people working together. Login securely here.
+          </h1>
+          
+          <div class="card p-4 rounded-plus bg-faded">
+            <form action={~p"/login"} method="POST">
+              <div class="form-group">
+                <label class="form-label" for="username">Email</label>
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  class="form-control form-control-md"
+                  placeholder="email"
+                  required
+                />
+                <input type="hidden" id="csrf" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()}>
+                <div class="invalid-feedback">No, you missed this one.</div>
+                
+                <div class="help-block">Your unique username to app</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="form-control form-control-md"
+                  placeholder="Password"
+                  max="12"
+                  required
+                />
+                <div class="invalid-feedback">Sorry, you missed this one.</div>
+                
+                <div class="help-block">Your password</div>
+              </div>
+              <!-- 
+                <div class="form-group text-left">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="rememberme">
+                    <label class="custom-control-label" for="rememberme"> Remember me for the next 30 days</label>
+                  </div>
+                </div> 
+              -->
+              <div class="row no-gutters">
+                <div class="col-lg-6 pr-lg-1 my-2">
+                  <button
+                    type="submit"
+                    class="btn btn-outline-info btn-block btn-pills waves-effect waves-themed"
+                  >
+                    Login <i class="fal fa-login"></i>
+                  </button>
+                </div>
+                
+                <div class="col-lg-6 pl-lg-1 my-2">
+                  <button
+                    type="submit"
+                    class="btn btn-outline-success btn-block btn-pills waves-effect waves-themed"
+                  >
+                    Signup <i class="fal fa-login"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <div class="col-md-3 hidden-sm-down"></div>
+      </div>
+      
+      <div class="position-absolute pos-bottom pos-left pos-right p-3 text-center text-black">
+        2026 © Tandem App
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("#js-login-btn").click(function(event)
+  {
+      // Fetch form to apply custom Bootstrap validation
+      var form = $("#js-login")
+
+      if (form[0].checkValidity() === false)
+      {
+          event.preventDefault()
+          event.stopPropagation()
+      }
+      form.addClass('was-validated');
+      // Perform ajax submit here...
+  });
+</script>

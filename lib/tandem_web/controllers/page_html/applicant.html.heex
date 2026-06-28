@@ -1,0 +1,169 @@
+<div class="row">
+    <div class="col-md-1"></div>
+
+    <div class="col-md-10 ml-auto mt-5">
+        <div class="subheader">
+            <h1 class="subheader-title">
+                <i class='subheader-icon fal fa-chart-pie'></i> Your Applications
+                <small>
+                </small>
+            </h1>
+        </div>
+
+        <!-- Flash Message -->
+        <div class="row">
+            <div class="col-md-12 col-lg-offset-2">
+                <%= if @flash[:error] do %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <strong>Oh snap!</strong> <%= @flash[:error] %>
+                </div>
+                <% end %>
+
+                <%= if @flash[:info] do %>
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <strong>Info!</strong> <%= @flash[:info] %>
+                </div>
+                <% end %>
+
+            </div>
+        </div>
+         
+
+        <div class="demo">
+            <button type="button" class="btn btn-outline-info btn-pills waves-effect waves-themed" data-toggle="modal" data-target="#apply-4-membership">
+                Apply for Membership
+            </button>
+        </div>
+
+
+        <!-- Membership Applications Table -->
+        <div id="panel-6" class="panel">
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="tab-content p-3">
+                        <div class="tab-pane fade active show">
+                            <!-- datatable start -->
+                            <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                <thead class="bg-primary-600">
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%= for membership_applications <-@membership_applications do %>
+                                        <tr>
+                                            <td><%= membership_applications.title %></td>
+                                            <td><%= membership_applications.category %></td>
+                                            <td><%= membership_applications.status %></td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href={~p"/membership/application/details/#{membership_applications.id}"} type="button" class="btn btn-outline-info btn-block btn-pills waves-effect waves-themed" aria-haspopup="true" aria-expanded="false">
+                                                        Details
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                            <!-- datatable end -->
+                        </div>
+                        <div class="tab-pane fade" id="tab-profile" role="tabpanel" aria-labelledby="tab-profile">
+                            Another Table Comes Here
+                        </div>
+                        <div class="tab-pane fade" id="tab-time" role="tabpanel" aria-labelledby="tab-time">
+                            Another Table Comes Here
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1"></div>
+</div>
+
+<!-- Membership Application Form -->
+<div class="modal fade" id="apply-4-membership" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        Close Window
+                        <i class="fal fa-times"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action={~p"/membership/application"} method="POST">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Title</label>
+                        <input
+                        type="text"
+                        name="title"
+                        class="form-control form-control-md"
+                        placeholder="Title"
+                        required
+                        />
+                        <input type="hidden" id="csrf" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()}>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="example-select">Category</label>
+                        <select class="form-control" id="example-select" name="category">
+                            <option>Associate</option>
+                            <option>Full Member</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Amount</label>
+                        <input
+                        type="number"
+                        name="amount"
+                        class="form-control form-control-md"
+                        placeholder="Amount"
+                        required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="example-textarea">Description</label>
+                        <textarea class="form-control" name="description" id="example-textarea" placeholder="Description" rows="5"></textarea>
+                    </div>
+                    
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 pr-lg-1 my-2">
+                            <button type="submit" class="btn btn-outline-info btn-block btn-pills waves-effect waves-themed">
+                                Apply <i class="fal fa-login"></i>
+                            </button>
+                        </div>
+
+                        <div class="col-lg-4 pr-lg-1 my-2">
+                            <button
+                            type="submit"
+                            name="status"
+                            value="DRAFT"
+                            class="btn btn-outline-success btn-block btn-pills waves-effect waves-themed">
+                                Save Draft <i class="fal fa-ban"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+                       
+
+
+
+          

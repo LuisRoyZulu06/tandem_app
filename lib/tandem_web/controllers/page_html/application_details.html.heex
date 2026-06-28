@@ -1,0 +1,248 @@
+<div class="row">
+    <div class="col-md-1"></div>
+
+    <div class="col-md-10 ml-auto mt-5">
+        <div class="subheader">
+            <h1 class="subheader-title">
+                <i class='subheader-icon fal fa-chart-pie'></i>Application Details
+                <small>
+                    Application Status: <%= @get_application_details.status %>
+                </small>
+            </h1>
+        </div>
+
+        <!-- Flash Message -->
+        <div class="row">
+            <div class="col-md-12 col-lg-offset-2">
+                <%= if @flash[:error] do %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <strong>Oh snap!</strong> <%= @flash[:error] %>
+                </div>
+                <% end %>
+
+                <%= if @flash[:info] do %>
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <strong>Info!</strong> <%= @flash[:info] %>
+                </div>
+                <% end %>
+
+            </div>
+        </div>
+
+        <div class="demo">
+            <button
+                type="button"
+                onclick="history.back()"
+                class="btn btn-outline-info btn-pills waves-effect waves-themed"
+            >
+                Back
+            </button>
+        </div>
+
+        <!-- Membership Applications Table -->
+        <div id="panel-6" class="panel">
+            <div class="panel-container show">
+                
+                <div class="panel-content">
+                    <%= if @get_application_details.status == "REJECTED" do %>
+                        <div class="demo-v-spacing">
+                            <div class="alert alert-danger" role="alert">
+                                Rejection Note:<br />
+                                <strong><%= @get_application_details.rejection_note %></strong>
+                            </div>
+                        </div>
+                    <% end %>
+
+                    <div class="mt-3">
+                        <h4><%= @get_application_details.title %></h4>
+                        <h4><%= @get_application_details.category %></h4>
+                        <h4><%= @get_application_details.amount %></h4>
+                        <textarea class="form-control" id="example-textarea-disabled" rows="5" disabled="">
+                            <%= @get_application_details.description %>
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <%= if @conn.assigns.user.user_type == 1 && @get_application_details.status == "DRAFT" do %>
+                                    <div class="row no-gutters">
+                                        <div class="col-lg-6 pr-lg-1 my-2">
+                                            <button type="submit" class="btn btn-outline-info btn-block btn-pills waves-effect waves-themed" data-toggle="modal" data-target="#edit-application">
+                                                Edit <i class="fal fa-login"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <% end %>
+
+                                <%= if @conn.assigns.user.user_type == 2 && @get_application_details.status == "UNDER_REVIEW" do %>
+                                    <div class="row no-gutters">
+                                        <div class="col-lg-6 pr-lg-1 my-2">
+                                            <button type="submit" class="btn btn-outline-info btn-block btn-pills waves-effect waves-themed" data-toggle="modal" data-target="#approveapp">
+                                                Approve <i class="fal fa-login"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="col-lg-6 pl-lg-1 my-2">
+                                            <button type="submit" class="btn btn-outline-danger btn-block btn-pills waves-effect waves-themed" data-toggle="modal" data-target="#rejectapp">
+                                                Reject <i class="fal fa-login"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <% end %>
+                            </div>
+                            <div class="col-md-6"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-1"></div>
+</div>
+
+
+<!-- Approve Application -->
+<div class="modal modal-alert fade" id="approveapp" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Approve Application?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">Close Window</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                This will mark the application as approved, and it can not be undone.
+            </div>
+            <div class="modal-footer">
+              <form action={~p"/approve/application//#{@get_application_details.id}"} method="POST">
+                <input type="hidden" name="status" value="APPROVED">
+                <input type="hidden" name="id" value={@get_application_details.id} >
+                <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} >
+                <button type="submit" class="btn btn-outline-info btn-block btn-pills waves-effect waves-themed">
+                    <i class="fal fa-ban"></i>
+                    Approve 
+                </button>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Application -->
+<div class="modal fade" id="rejectapp" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        Close Window
+                        <i class="fal fa-times"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="demo-v-spacing">
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Reject Application?</strong> This will mark the application as rejected, and it can not be undone.
+                    </div>
+                </div>
+
+                <form action={~p"/approve/application//#{@get_application_details.id}"} method="POST">
+                    <input type="hidden" name="status" value="REJECTED">
+                    <input type="hidden" name="id" value={@get_application_details.id} >
+                    <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} >
+                    <div class="form-group mt-3">
+                        <label class="form-label" for="example-textarea">Rejection Note</label>
+                        <textarea class="form-control" name="rejection_note" id="example-textarea" placeholder="Description" rows="5"></textarea>
+                    </div>
+                    
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 pr-lg-1 my-2">
+                            <button type="submit" class="btn btn-outline-danger btn-block btn-pills waves-effect waves-themed">
+                                Reject <i class="fal fa-login"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Membership Application Form -->
+<div class="modal fade" id="edit-application" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        Close Window
+                        <i class="fal fa-times"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action={~p"/approve/application//#{@get_application_details.id}"} method="POST">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Title</label>
+                        <input
+                        type="text"
+                        name="title"
+                        class="form-control form-control-md"
+                        placeholder="Title"
+                        required
+                        />
+                        <input type="hidden" name="id" value={@get_application_details.id} >
+                        <input type="hidden" name="status" value="UNDER_REVIEW">
+                        <input type="hidden" id="csrf" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()}>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="example-select">Category</label>
+                        <select class="form-control" id="example-select" name="category">
+                            <option>Associate</option>
+                            <option>Full Member</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Amount</label>
+                        <input
+                        type="number"
+                        name="amount"
+                        class="form-control form-control-md"
+                        placeholder="Amount"
+                        required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="example-textarea">Description</label>
+                        <textarea class="form-control" name="description" id="example-textarea" placeholder="Description" rows="5"></textarea>
+                    </div>
+                    
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 pr-lg-1 my-2">
+                            <button type="submit" class="btn btn-outline-info btn-block btn-pills waves-effect waves-themed">
+                                Apply <i class="fal fa-login"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+                       
+
+
+
+          

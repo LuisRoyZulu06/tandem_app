@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8" />
+    <meta name="description" content="Page Titile" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui"/>
+
+    <title>Tandem App</title>
+
+    <!-- Call App Mode on ios devices -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- Remove Tap Highlight on Windows Phone IE -->
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- base css -->
+    <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.bundle.css"} />
+    <link phx-track-static rel="stylesheet" href={~p"/assets/css/vendors.bundle.css"} />
+    <!-- datatable css -->
+    <link phx-track-static rel="stylesheet" media="screen, print" href={~p"/assets/css/datatables/datatables.bundle.css"} />
+  </head>
+
+  <body class="mod-bg-1 ">
+    <div class="page-wrapper">
+      <div class="page-inner">
+        <div class="page-content-wrapper">
+          <!-- Navigation Header -->
+          <header class="page-header" role="banner">
+              <!-- we need this logo when user switches to nav-function-top -->
+              <div class="page-logo">
+                  <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative">
+                      <img src="img/logo.png" alt="SmartAdmin WebApp" aria-roledescription="logo">
+                      <span class="page-logo-text mr-1">Ndawo Hub</span>
+                      <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
+                  </a>
+              </div>
+              
+              <!-- DOC: nav menu layout change shortcut -->
+              <div class="hidden-md-down dropdown-icon-menu position-relative">
+                <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center">
+                  <img src={~p"/images/logo.png"} alt="Tandem App" aria-roledescription="logo" />
+                  <span class="page-logo-text-inapp text-black mr-1">Tandem App</span>
+                </a>
+              </div>
+              
+              <div class="ml-auto d-flex">
+                  <!-- app user menu -->
+                  <div>
+                      <a href="#" data-toggle="dropdown" class="header-icon d-flex align-items-center justify-content-center ml-2">
+                        <img src={~p"/images/avatar/3.png"} alt="User avatar" class="profile-image rounded-circle" />
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+                          <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
+                              <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+                                  <span class="mr-2">
+                                      <img src={~p"/images/avatar/1.png"} alt="User avatar" class="rounded-circle profile-image" />
+                                  </span>
+                                  <div class="info-card-text">
+                                      <div class="fs-lg text-truncate text-truncate-lg">
+                                        <%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%>
+                                      </div>
+                                      <span class="text-truncate text-truncate-md opacity-80">
+                                        <%= "#{(@conn.assigns.user.email)}"%>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="dropdown-divider m-0"></div>
+                          <a href="#" class="dropdown-item">
+                              <i class="fal fa-user"></i>
+                              <span>Profile</span>
+                          </a>
+                          <div class="dropdown-divider m-0"></div>
+                          <a class="dropdown-item fw-500 pt-3 pb-3" href={~p"/signout"}>
+                              <i class="fal fa-power-off"></i>
+                              <span data-i18n="drpdwn.page-logout">Logout</span>
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </header>
+
+          <!-- Main Content -->
+          <main id="js-page-content" role="main" class="page-content">
+            {@inner_content}
+          </main>
+
+          <!-- BEGIN Page Footer -->
+          <footer class="page-footer" role="contentinfo">
+            <div class="d-flex align-items-center flex-1 text-muted">
+              <span class="hidden-md-down fw-700">
+                2026 © All Rights Reserved
+              </span>
+            </div>
+            <div>
+              <ul class="list-table m-0">
+                  <li><a href="#" class="text-secondary fw-700">About</a></li>
+                  <li class="pl-3"><a href="#" class="text-secondary fw-700">License</a></li>
+                  <li class="pl-3"><a href="#" class="text-secondary fw-700">Documentation</a></li>
+              </ul>
+            </div>
+          </footer>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Base JS -->
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.bundle.js"}>
+    </script>
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/vendors.bundle.js"}>
+    </script>
+    <!-- datatable JS -->
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/datatables/datatables.bundle.js"}>
+    </script>
+
+    <script>
+      $(document).ready(function()
+      {
+        // initialize datatable
+        $('#dt-basic-example').dataTable(
+        {
+          responsive: true,
+          lengthChange: false,
+          dom:
+            "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+          buttons: [
+            {
+                extend: 'pdfHtml5',
+                text: 'PDF',
+                titleAttr: 'Generate PDF',
+                className: 'btn-outline-danger btn-sm mr-1'
+            },
+            {
+                extend: 'excelHtml5',
+                text: 'Excel',
+                titleAttr: 'Generate Excel',
+                className: 'btn-outline-success btn-sm mr-1'
+            },
+            {
+                extend: 'csvHtml5',
+                text: 'CSV',
+                titleAttr: 'Generate CSV',
+                className: 'btn-outline-primary btn-sm mr-1'
+            },
+            {
+                extend: 'copyHtml5',
+                text: 'Copy',
+                titleAttr: 'Copy to clipboard',
+                className: 'btn-outline-primary btn-sm mr-1'
+            },
+            {
+                extend: 'print',
+                text: 'Print',
+                titleAttr: 'Print Table',
+                className: 'btn-outline-primary btn-sm'
+            }
+          ]
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title default="Tandem" suffix=" · App" phx-no-format>{assigns[:page_title]}</.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
+    </script>
+    <script>
+      (() => {
+        const systemTheme = () => matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+
+        const setTheme = (theme) => {
+          if (theme === "system") {
+            localStorage.removeItem("phx:theme");
+            document.documentElement.setAttribute("data-theme", systemTheme());
+            document.documentElement.setAttribute("data-theme-source", "system");
+          } else {
+            localStorage.setItem("phx:theme", theme);
+            document.documentElement.setAttribute("data-theme", theme);
+            document.documentElement.setAttribute("data-theme-source", "user");
+          }
+        };
+        if (!document.documentElement.hasAttribute("data-theme")) {
+          setTheme(localStorage.getItem("phx:theme") || "system");
+        }
+        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
+        
+        window.addEventListener("phx:set-theme", (e) => setTheme(e.target.dataset.phxTheme));
+
+        matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+          if (document.documentElement.getAttribute("data-theme-source") === "system") {
+            document.documentElement.setAttribute("data-theme", systemTheme());
+          }
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    {@inner_content}
+  </body>
+</html>
+-->
