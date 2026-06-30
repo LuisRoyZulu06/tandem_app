@@ -338,8 +338,3 @@ All implementation decisions, validation, testing, and final integration were ma
 * API layer support
 
 ---
-
-# Author
-Luis Roy Zulu
-0979797337
-luiszulu6@gmail.com
